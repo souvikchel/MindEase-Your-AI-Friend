@@ -13,6 +13,9 @@ function Chat({ onBack, firstOpen = true }) {
   const chatEndRef = useRef(null);
   const firstRenderRef = useRef(firstOpen);
 
+  // ✅ Use Render backend URL
+  const API_BASE_URL = "https://mindease-your-ai-friend.onrender.com";
+
   // --- Send Message ---
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -25,7 +28,7 @@ function Chat({ onBack, firstOpen = true }) {
     setIsTyping(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/chat", {
+      const res = await axios.post(`${API_BASE_URL}/chat`, {
         userMessage: input,
       });
 
