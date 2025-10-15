@@ -6,26 +6,28 @@ const axios = require("axios");
 require("dotenv").config();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors({
-  origin: [
-    "http://localhost:3000",               // local dev
-    "https://mind-ease-your-ai-friend.vercel.app/" // your deployed frontend
-  ],
-  methods: ["GET", "POST"],
-  credentials: true
-}));
+// ✅ CORS setup (allow local + deployed frontend)
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",                  // local dev
+      "https://mind-ease-your-ai-friend.vercel.app" // your Vercel frontend (no trailing slash!)
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true
+  })
+);
 
 app.use(express.json());
 
-// Test Route
+// ✅ Test Route
 app.get("/", (req, res) => {
   res.send("🚀 MindEase Backend is running successfully!");
 });
 
-// Chat Route (Gemini API)
+// ✅ Chat Route (Gemini API)
 app.post("/chat", async (req, res) => {
   const { userMessage } = req.body;
 
@@ -62,7 +64,9 @@ Always close with a short, warm reassurance like a true friend.
       }
     );
 
-    const reply = response.data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't think of a reply.";
+    const reply =
+      response.data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Sorry, I couldn't think of a reply.";
 
     res.json({ reply });
   } catch (error) {
@@ -71,7 +75,7 @@ Always close with a short, warm reassurance like a true friend.
   }
 });
 
-// Start Server
+// ✅ Start Server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
