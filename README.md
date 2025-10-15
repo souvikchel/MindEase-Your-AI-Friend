@@ -71,3 +71,35 @@ Built to **listen like a friend**, **support like a guide**, and **heal through 
 
 ## 🧩 Architecture Overview
 
+Frontend (React + Vercel)
+↓
+Backend (Express + Node.js on Render)
+↓
+Gemini API (AI Response Engine)
+↓
+MongoDB (User Data + Mood Logs)
+
+
+---
+
+## 💡 Vision
+
+To make **mental wellness accessible, relatable, and human** through technology.  
+No bots. No disclaimers. Just warmth, care, and real connection.
+
+---
+
+## 🧑‍💻 Author
+
+**👨‍🎨 Souvik Chel**  
+*Designer • Developer • Dreamer*
+
+📫 [GitHub](https://github.com/souvikchel) • [LinkedIn](https://www.linkedin.com/in/souvikchel83/ )
+
+---
+
+<p align="center">
+  <i>“Be kind to your mind — it’s been through a lot.”</i><br>
+  🌿 <b>MindEase © 2025</b> | Built with ❤️ for Mental Wellness
+</p>
+
