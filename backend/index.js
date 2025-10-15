@@ -10,8 +10,14 @@ const PORT = 5000;
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:3000"  // allow frontend React app
+  origin: [
+    "http://localhost:3000",               // local dev
+    "https://mind-ease-your-ai-friend.vercel.app/" // your deployed frontend
+  ],
+  methods: ["GET", "POST"],
+  credentials: true
 }));
+
 app.use(express.json());
 
 // Test Route
