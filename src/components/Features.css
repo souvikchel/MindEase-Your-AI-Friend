@@ -1,0 +1,51 @@
+.features {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;  /* consistent top/bottom spacing */
+  min-height: auto;     /* remove full viewport to avoid huge gaps */
+  background: transparent; /* let background image show */
+  gap: 40px;            /* space between heading and cards */
+}
+
+.features h2 {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+.feature-cards {
+  display: flex;
+  flex-wrap: wrap;      /* make cards responsive */
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1); /* transparent glass effect */
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  flex: 1 1 250px;     /* responsive width */
+  min-width: 200px;
+  backdrop-filter: blur(5px); /* soft blur/glass effect */
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* subtle hover effect */
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #eee; /* readable on transparent background */
+}

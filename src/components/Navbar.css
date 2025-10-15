@@ -1,0 +1,35 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  background: transparent;  /* keep transparent */
+  box-shadow: none;         /* remove shadow */
+  position: fixed;           /* make navbar fixed */
+  top: 0;                    /* stick to top */
+  width: 100%;               /* full width */
+  z-index: 1000;             /* stay above other content */
+}
+
+
+.logo {
+  font-size: 24px; 
+  font-weight: bold;
+  color: #fff; /* Keep text readable */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links li {
+  cursor: pointer;
+  color: #fff;   /* White text for visibility */
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links li:hover {
+  color: #f5a623; /* Hover effect */
+}

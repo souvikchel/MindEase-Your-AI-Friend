@@ -1,0 +1,66 @@
+.hero {
+  height: 90vh; /* full visible viewport height */
+  display: flex;
+  justify-content: flex-start; /* start from top */
+  align-items: center; /* horizontally center */
+  text-align: center;
+  background: url('/public/bg.jpg') center/cover no-repeat; /* your bg image */
+  position: relative;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 800px;
+  margin: 180px auto 0 auto; /* pushes content down, horizontally centered */
+  width: 100%;
+  padding: 0 20px; /* small horizontal padding for smaller screens */
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.hero-content button {
+  padding: 14px 28px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.hero-content button:hover {
+  transform: translateY(-3px);
+  background-color: #5c6bc0;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  .hero-content {
+    margin-top: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+  .hero-content {
+    margin-top: 100px;
+  }
+}
+.hero-content h1 {
+  font-size: 3rem;
+  color: #fff;
+  margin-bottom: 20px;
+}

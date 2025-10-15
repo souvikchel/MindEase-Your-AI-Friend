@@ -1,0 +1,33 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;       /* consistent spacing */
+  min-height: auto;          /* remove full viewport height to avoid empty gaps */
+  background: transparent;   /* background image visible */
+  gap: 40px;                 /* space between heading and list */
+}
+
+.timeline h2 {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+.timeline ol {
+  background: rgba(255, 255, 255, 0.1); /* transparent glass effect */
+  color: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  list-style: decimal inside;
+  max-width: 600px;
+  width: 100%;
+}
+
+.timeline li {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
