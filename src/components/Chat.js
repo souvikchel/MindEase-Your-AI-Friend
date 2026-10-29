@@ -14,7 +14,10 @@ function Chat({ onBack, firstOpen = true }) {
   const firstRenderRef = useRef(firstOpen);
 
   // ✅ Use Render backend URL
-  const API_BASE_URL = "https://mindease-your-ai-friend.onrender.com";
+ const API_BASE_URL = "https://mindease-your-ai-friend.onrender.com";
+ 
+
+
 
   // --- Send Message ---
   const handleSend = async () => {
