@@ -1,66 +1,75 @@
-// index.js (Backend)
 
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const mongoose = require("mongoose");
+const crypto = require("crypto");
 require("dotenv").config();
+
+const Message = require("./models/Message");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ CORS setup (allow local + deployed frontend)
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",                  // local dev
-      "https://mind-ease-your-ai-friend.vercel.app" // your Vercel frontend (no trailing slash!)
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://mind-ease-your-ai-friend.vercel.app",
     ],
     methods: ["GET", "POST", "OPTIONS"],
-    credentials: true
+    credentials: true,
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
-// ✅ Test Route
 app.get("/", (req, res) => {
-  res.send("🚀 MindEase Backend is running successfully!");
+  res.send("MindEase Backend is running successfully!");
 });
 
-// ✅ Chat Route (Gemini API)
+// Chat with Gemini and save both messages in MongoDB
 app.post("/chat", async (req, res) => {
   const { userMessage } = req.body;
+  const conversationId =
+    typeof req.body.conversationId === "string" &&
+    req.body.conversationId.trim()
+      ? req.body.conversationId.trim()
+      : crypto.randomUUID();
 
-  const empatheticPrompt = `
-You are a warm, caring, and deeply human-like friend. 
-Your job is to give comfort, encouragement, and gentle support in a natural way. 
-Never say you are an AI. 
-Do not use formatting symbols, markdown, or bullet characters like *, **, or -. 
-If you need to list, use plain numbers only. 
-Keep responses short, natural, and human. 
-First, acknowledge the feeling in a simple caring way. 
-Then ask at most 2 gentle questions to understand better. 
-Then share at most 3 small, practical suggestions in plain numbers. 
-Do not overload with long explanations. 
-Never include crisis hotlines or medical disclaimers. 
-Always close with a short, warm reassurance like a true friend. 
-
-"${userMessage}"
-`;
+  if (
+    typeof userMessage !== "string" ||
+    !userMessage.trim() ||
+    userMessage.length > 10000
+  ) {
+    return res.status(400).json({
+      error: "Please provide a valid message.",
+    });
+  }
 
   try {
+    const empatheticPrompt = `
+You are a warm, caring, and supportive friend.
+Respond naturally, gently, and concisely.
+Avoid unnecessary formatting and long explanations.
+Acknowledge the user's feelings and offer practical support.
+
+User message: "${userMessage.trim()}"
+`;
+
     const response = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent",
       {
         contents: [
           {
             role: "user",
-            parts: [{ text: empatheticPrompt }]
-          }
-        ]
+            parts: [{ text: empatheticPrompt }],
+          },
+        ],
       },
       {
-        params: { key: process.env.GEMINI_API_KEY }
+        params: { key: process.env.GEMINI_API_KEY },
       }
     );
 
@@ -68,14 +77,72 @@ Always close with a short, warm reassurance like a true friend.
       response.data.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Sorry, I couldn't think of a reply.";
 
-    res.json({ reply });
+    // Save the user message and AI reply
+    await Message.insertMany([
+      {
+        conversationId,
+        sender: "user",
+        text: userMessage.trim(),
+      },
+      {
+        conversationId,
+        sender: "assistant",
+        text: reply,
+      },
+    ]);
+
+    res.json({ reply, conversationId });
   } catch (error) {
-    console.error("Error from Gemini API:", error.response?.data || error.message);
-    res.status(500).json({ error: "Failed to get response from Gemini API" });
+    console.error(
+      "Chat or database error:",
+      error.response?.data || error.message
+    );
+
+    res.status(500).json({
+      error: "Failed to process or save your message.",
+    });
   }
 });
 
-// ✅ Start Server
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+// Retrieve saved messages for a conversation
+app.get("/api/messages/:conversationId", async (req, res) => {
+  try {
+    const messages = await Message.find({
+      conversationId: req.params.conversationId,
+    })
+      .sort({ createdAt: 1 })
+      .limit(500)
+      .lean();
+
+    res.json({ messages });
+  } catch (error) {
+    console.error("Message retrieval error:", error.message);
+    res.status(500).json({
+      error: "Failed to retrieve messages.",
+    });
+  }
 });
+
+async function startServer() {
+  try {
+    if (!process.env.MONGODB_URI) {
+      throw new Error("MONGODB_URI is missing from backend/.env");
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY is missing from backend/.env");
+    }
+
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("MongoDB connected successfully");
+
+    app.listen(PORT, () => {
+      console.log(`Backend running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error.message);
+    process.exit(1);
+  }
+}
+
+startServer();
